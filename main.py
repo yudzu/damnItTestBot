@@ -17,8 +17,6 @@ storage = MemoryStorage()
 bot = Bot(TOKEN)
 dp = Dispatcher(storage=storage)
 
-user_dict: dict[str, dict[str, str]] = {}
-
 
 class FSMForm(StatesGroup):
     send_fio = State()
@@ -35,7 +33,7 @@ async def process_cmd_start(message: Message, state: FSMContext):
     await state.set_state(FSMForm.send_fio)
 
 
-@dp.message(F.text.regexp(r"^[А-Яа-яёЁ]+ [А-Яа-яёЁ]+ [А-Яа-яёЁ]+$"))
+@dp.message(F.text.regexp(r"^(([А-Яа-яёЁ]|[a-zA-Z])+(-| )?){3,}$"))
 async def get_fio(message: Message, state: FSMContext):
     await state.update_data(fio=message.text)
     await message.answer("Укажите ваш номер телефона в формате +7 (xxx) xxx xx xx")
@@ -90,7 +88,7 @@ async def process_button_not_press(message: Message):
 
 
 @dp.message(StateFilter(default_state))
-async def send_ech(message: Message):
+async def send_echo(message: Message):
     await message.answer("Извините, но я вас не понимаю(")
 
 if __name__ == "__main__":
