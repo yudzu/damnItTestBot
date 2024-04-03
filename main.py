@@ -33,7 +33,7 @@ async def process_cmd_start(message: Message, state: FSMContext):
     await state.set_state(FSMForm.send_fio)
 
 
-@dp.message(F.text.regexp(r"^(([А-Яа-яёЁ]|[a-zA-Z])+(-| )?){3,}$"))
+@dp.message(StateFilter(FSMForm.send_fio), F.text.regexp(r"^(([А-Яа-яёЁ]|[a-zA-Z])+(-| )?){3,}$"))
 async def get_fio(message: Message, state: FSMContext):
     await state.update_data(fio=message.text)
     await message.answer("Укажите ваш номер телефона в формате +7 (xxx) xxx xx xx")
